@@ -22,11 +22,19 @@ class AlarmDetail(BaseModel):
     created_at: datetime
     
 class AlarmInput(BaseModel):
-    kpi_id: PydanticObjectId
+    kpi_id: str
     site_id: int = Field(...)
-    machine_id: Optional[PydanticObjectId] = None
+    machine_id: Optional[str] = None
     threshold: float = Field(...)
     threshold_type: ThresholdType
+    
+class AlarmUpdate(BaseModel):
+    kpi_id: Optional[str] = None
+    site_id: Optional[int] = None
+    machine_id: Optional[str] = None
+    threshold: Optional[float] = None
+    threshold_type: Optional[ThresholdType] = None
+    enabled: Optional[bool] = None
     
 class Alarm(BaseModel):
     kpi_id: PydanticObjectId
