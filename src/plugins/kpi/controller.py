@@ -107,6 +107,7 @@ async def computeKPIBySite(
     Returns:
         KPIResponse: The response containing the success status, data, and message.
     """
+    print("user: ", user)
     try:
         start_date_obj = datetime.strptime(start_date, "%Y-%m-%d %H:%M:%S")
         end_date_obj = datetime.strptime(end_date, "%Y-%m-%d %H:%M:%S")

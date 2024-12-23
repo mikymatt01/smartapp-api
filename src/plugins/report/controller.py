@@ -19,7 +19,7 @@ import os
 from firebase_admin import storage
 
 import markdown2
-from weasyprint import CSS, HTML
+# from weasyprint import CSS, HTML
 
 import dotenv
 dotenv.load_dotenv()
@@ -150,7 +150,7 @@ async def create_report(request: Request, item:CreateReportBody, user: User = De
 
         # Convert HTML to PDF using WeasyPrint
         pdf_output = io.BytesIO()
-        HTML(string=html_content).write_pdf(pdf_output, stylesheets=[CSS(string=css)])
+        # HTML(string=html_content).write_pdf(pdf_output, stylesheets=[CSS(string=css)])
         pdf_output.seek(0)  # Reset buffer position
 
     except Exception as e:

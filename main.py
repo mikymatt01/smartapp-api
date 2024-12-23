@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, RedirectResponse
 from contextlib import asynccontextmanager
 from fastapi.requests import Request
+from fastapi_utilities import repeat_at, repeat_every
 
 sys.path.append(os.path.abspath("."))
 from src.plugins.auth.firebase import verify_firebase_token
@@ -12,11 +13,11 @@ from src.plugins.user import controller as user_controller
 from src.plugins.kpi import controller as kpi_controller
 from src.plugins.site import controller as site_controller
 from src.plugins.report import controller as report_controller
-from src.plugins.anomalies import controller as anomalies_controller
+# from src.plugins.chat import controller as chat_controller
+# from src.plugins.anomalies import controller as anomalies_controller
 from utils import description
 from src.config.firebase_config import initialize_firebase
 from src.config.db_config import AsyncDatabase, SyncDatabase
-from src.utils import create_report_collection
 from reports.tests_report_mongodb import mock_reports
 
 import logging
@@ -27,7 +28,6 @@ logger = logger = logging.getLogger('uvicorn.error')
 
 initialize_firebase()
 
-from src.plugins.chat import controller as chat_controller
 
 @asynccontextmanager
 async def startup_shutdown_db(app: FastAPI):
@@ -92,8 +92,6 @@ async def check_mongodb_connection(request: Request):
     else:
         return request.app.mongodb_obj.check_mongodb_connection()
 
-
-
 @app.get(
         "/mongodb/list_all_data",
         summary="List all data in MongoDB",
@@ -113,5 +111,5 @@ app.include_router(user_controller.router)
 app.include_router(kpi_controller.router)
 app.include_router(site_controller.router)
 app.include_router(report_controller.router)
-app.include_router(chat_controller.router)
-app.include_router(anomalies_controller.router)
+# app.include_router(chat_controller.router)
+# app.include_router(anomalies_controller.router)
