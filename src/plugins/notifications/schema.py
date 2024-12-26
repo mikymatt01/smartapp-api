@@ -16,6 +16,7 @@ class NotificationDetail(BaseModel):
     title: str = Field(...)
     message: str = Field(...)
     created_at: datetime
+    seen: bool
 
 class NotificationResponse(BaseModel):
     success: bool

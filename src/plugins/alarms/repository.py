@@ -8,7 +8,7 @@ from bson import ObjectId
 
 async def getAlarms(uid: List[str], request: Request | None = None, alarms_collection: Collection[AlarmDetail] | None = None) -> List[Alarm]:
     alarms_collection = get_collection(request, alarms_collection, "alarms")
-    alarms = alarms_collection.find({ "user_id": uid }).sort('created_at', 1)
+    alarms = alarms_collection.find({ "user_id": uid }).sort('created_at', -1)
     return [AlarmDetail(**alarm) async for alarm in alarms]
 
 async def createAlarm(uid: str, item: AlarmInput, request: Request | None = None, alarms_collection: Collection[AlarmDetail] | None = None):

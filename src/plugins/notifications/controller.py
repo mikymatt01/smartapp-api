@@ -23,4 +23,16 @@ async def getNotifications(
     except Exception as e:
         print(e)
         return NotificationResponse(success=False, data=None, message=f"Error getting notifications: {str(e)}")
+
+@router.get("/seen", status_code=200, response_model=NotificationResponse, summary="Get all notifications")
+async def setNotificationsAsSeen(
+    request: Request,
+    user=Depends(verify_firebase_token)
+):
+    try:
+        alarms = await service.setNotificationsAsSeen(user.uid, request=request)
+        return NotificationResponse(success=True, data=alarms, message="Notifications retrieved successfully")
+    except Exception as e:
+        print(e)
+        return NotificationResponse(success=False, data=None, message=f"Error getting notifications: {str(e)}")
     

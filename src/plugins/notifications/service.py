@@ -6,3 +6,6 @@ from . import repository as alarm_repository
 
 async def getNotifications(uid: str, request: Request | None = None, notifications_collection: Collection[NotificationDetail] | None = None):
     return await alarm_repository.getNotifications(uid, request=request, notifications_collection=notifications_collection)
+
+async def setNotificationsAsSeen(uid: str, request: Request | None = None, notifications_collection: Collection[NotificationDetail] | None = None):
+    return await alarm_repository.setNotificationsAsSeen(uid, request=request, notifications_collection=notifications_collection)
