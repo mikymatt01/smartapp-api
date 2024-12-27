@@ -6,7 +6,7 @@ from .schema import NotificationDetail
 
 async def getNotifications(uid: str, request: Request | None = None, notifications_collection: Collection[NotificationDetail] | None = None) -> List[NotificationDetail]:
     notifications_collection = get_collection(request, notifications_collection, "notifications")
-    notifications = notifications_collection.find({ "user_id": uid })
+    notifications = notifications_collection.find({ "user_id": uid }).sort({"created_at": -1})
     return [NotificationDetail(**notification) async for notification in notifications]
 
 async def setNotificationsAsSeen(uid: str, request: Request | None = None, notifications_collection: Collection[NotificationDetail] | None = None) -> List[NotificationDetail]:
