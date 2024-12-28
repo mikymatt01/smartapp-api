@@ -8,10 +8,18 @@ from enum import Enum
 class ThresholdType(str, Enum):
     UPPER_BOUND = "UPPER_BOUND"
     LOWER_BOUND = "LOWER_BOUND"
+    
+class OperationType(str, Enum):
+    sum = "sum"
+    avg = "avg"
+    min = "min"
+    max = "max"
+    std = "std"
 
 class AlarmOverview(BaseModel):
     id: PydanticObjectId = Field(alias="_id")
     kpi_id: PydanticObjectId
+    op: OperationType
     kpi_name: Optional[str] = None
     user_id: str = Field(...)
     site_id: int = Field(...)
@@ -26,6 +34,7 @@ class AlarmOverview(BaseModel):
 class AlarmDetail(BaseModel):
     id: PydanticObjectId = Field(alias="_id")
     kpi_id: PydanticObjectId
+    op: OperationType
     user_id: str = Field(...)
     site_id: int = Field(...)
     machine_id: Optional[PydanticObjectId] = None
@@ -35,6 +44,7 @@ class AlarmDetail(BaseModel):
     enabled: bool = True
     created_at: datetime 
 class AlarmInput(BaseModel):
+    op: OperationType
     kpi_id: str
     site_id: int = Field(...)
     machine_id: Optional[str] = None
@@ -42,6 +52,7 @@ class AlarmInput(BaseModel):
     threshold_type: ThresholdType
     
 class AlarmUpdate(BaseModel):
+    op: Optional[OperationType] = None
     kpi_id: Optional[str] = None
     site_id: Optional[int] = None
     machine_id: Optional[str] = None
@@ -51,6 +62,7 @@ class AlarmUpdate(BaseModel):
     
 class Alarm(BaseModel):
     kpi_id: PydanticObjectId
+    op: OperationType
     user_id: str = Field(...)
     site_id: int = Field(...)
     threshold: float = Field(...)

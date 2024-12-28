@@ -72,6 +72,7 @@ async def createAlarm(uid: str, item: AlarmInput, request: Request | None = None
     alarms_collection = get_collection(request, alarms_collection, "alarms")
     alarm = Alarm(
         kpi_id=ObjectId(item.kpi_id),
+        op=item.op,
         user_id=uid,
         site_id=item.site_id,
         machine_id=item.machine_id,
