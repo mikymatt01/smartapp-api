@@ -3,13 +3,70 @@ from pymongo.collection import Collection
 from src.utils import get_collection
 from fastapi import Request
 from typing import List
-from .schema import AlarmDetail, AlarmInput, Alarm, AlarmUpdate
+from .schema import AlarmDetail, AlarmInput, Alarm, AlarmUpdate, AlarmOverview
 from bson import ObjectId
 
-async def getAlarms(uid: List[str], request: Request | None = None, alarms_collection: Collection[AlarmDetail] | None = None) -> List[Alarm]:
+alarm_detail_aggregation = [
+  {
+    "$addFields": {
+      "machine_obj_id": { "$toObjectId": "$machine_id" },
+      "kpi_obj_id": { "$toObjectId": "$kpi_id" }
+    }
+  },
+  {
+    "$lookup": {
+      "from": "machines",
+      "localField": "machine_obj_id",
+      "foreignField": "_id",
+      "as": "machine"
+    }
+  },
+    {
+    "$lookup": {
+      "from": "kpis",
+      "localField": "kpi_obj_id",
+      "foreignField": "_id",
+      "as": "kpi"
+    }
+  },
+  {
+    "$unwind": {
+      "path": "$machine",
+      "preserveNullAndEmptyArrays": True
+    }
+  },
+    {
+    "$unwind": {
+      "path": "$kpi",
+      "preserveNullAndEmptyArrays": True
+    }
+  },
+    {
+    "$addFields": {
+      "machine_name": "$machine.name",
+      "kpi_name": "$kpi.name"
+    }
+  },
+  {
+    "$sort": {
+      "created_at": -1
+    }
+  }
+]
+
+
+async def getAlarms(uid: List[str], request: Request | None = None, alarms_collection: Collection[AlarmDetail] | Collection[AlarmOverview] | None = None) -> List[Alarm]:
     alarms_collection = get_collection(request, alarms_collection, "alarms")
-    alarms = alarms_collection.find({ "user_id": uid }).sort('created_at', -1)
-    return [AlarmDetail(**alarm) async for alarm in alarms]
+    alarms = alarms_collection.aggregate(
+        [
+            {
+                "$match": {
+                "user_id": uid
+                }
+            },
+        ] + alarm_detail_aggregation
+        ) #.find({ "user_id": uid }).sort('created_at', -1)
+    return [AlarmOverview(**alarm) async for alarm in alarms]
 
 async def createAlarm(uid: str, item: AlarmInput, request: Request | None = None, alarms_collection: Collection[AlarmDetail] | None = None):
     alarms_collection = get_collection(request, alarms_collection, "alarms")
