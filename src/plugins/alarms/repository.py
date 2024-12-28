@@ -17,6 +17,7 @@ async def createAlarm(uid: str, item: AlarmInput, request: Request | None = None
         kpi_id=ObjectId(item.kpi_id),
         user_id=uid,
         site_id=item.site_id,
+        machine_id=item.machine_id,
         threshold=item.threshold,
         threshold_type=item.threshold_type
     )

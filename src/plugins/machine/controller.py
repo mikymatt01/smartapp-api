@@ -33,6 +33,23 @@ async def get_all_machines(request:Request, user=Depends(verify_firebase_token))
         return MachineResponse(success=False, data=None, message=str(e))
         #raise HTTPException(status_code=500, detail=str(e))
 
+@router.get("/site",status_code=200, response_model=MachineResponse, summary="Get all machines in the dataset")
+async def get_all_machines(site: int, request:Request, user=Depends(verify_firebase_token)):
+    """
+    Get all machines in the dataset
+
+    Returns:
+    - MachineResponse: A response object containing the list of machines
+    """
+    try:
+        machines = await repository.get_by_site(site, request)
+
+        return MachineResponse(success=True, data=machines, message="Machines listed successfully")
+    except Exception as e:
+        logger.error(f"Error getting all machines: {e}")
+        return MachineResponse(success=False, data=None, message=str(e))
+        #raise HTTPException(status_code=500, detail=str(e))
+
 # filter
 @router.get("/filter", response_model=MachineResponse, status_code=201, summary="Filter machines by type or name")
 async def filter_machines(request: Request, machine_name: str = None, machine_type: str = None, user=Depends(verify_firebase_token)):
