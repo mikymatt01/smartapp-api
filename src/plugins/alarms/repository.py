@@ -75,7 +75,7 @@ async def createAlarm(uid: str, item: AlarmInput, request: Request | None = None
         op=item.op,
         user_id=uid,
         site_id=item.site_id,
-        machine_id=item.machine_id,
+        machine_id=item.machine_id if item.machine_id else None,
         threshold=item.threshold,
         threshold_type=item.threshold_type
     )
